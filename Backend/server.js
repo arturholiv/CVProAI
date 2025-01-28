@@ -15,11 +15,21 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/deepseek', (req, res) => {
-  const {input} = req.body;
-  console.log(input);
-  main(input).then((response) => {
-    res.send(response);
-  });
+  try {
+    const {input} = req.body;
+
+    if (!input) {
+      return res.status(400).json({error: 'Please provide an input'});
+    }
+
+    main(input).then((response) => {
+      res.send(response);
+    });
+    
+  } catch (error) {
+    res.status(500).json({error: 'Something went wrong'});
+    throw new Error(error);
+  }
 });
 
 app.listen((PORT), () => {
